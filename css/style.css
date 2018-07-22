@@ -1,3 +1,56 @@
-body {
+body, div {
     text-align: center;
+}
+
+.flex-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    height: 150px;
+    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 50px 50px 50px 50px;
+    grid-template-rows: 50px 50px 50px;
+    grid-gap: 10px;
+    clear: both;
+}
+
+button {
+    border: 1px solid #b0b0f0;
+    border-radius: 10px;
+    text-align: center;
+    vertical-align: center;
+    margin: center;
+}
+
+#left {
+    height: 2fr;
+    width: 1fr;
+    grid-column: 1 / 2;
+    grid-row: span 2;
+    order: 1;
+}
+
+#top {
+    height: 1fr;
+    width: 2fr;
+    grid-column: 2 / 4;
+    grid-row: 1 / 2;
+    order: 2;
+}
+
+#bottom {
+    height: 1fr;
+    width: 2fr;
+    grid-column: 2 / 4;
+    grid-row: 2 / 3;
+    order: 3;
+}
+
+#right {
+    height: 2fr;
+    width: 1fr;
+    grid-column: 4 / 5;
+    grid-row: span 2;
+    order: 4;
 }
