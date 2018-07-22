@@ -7,14 +7,27 @@
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 
-
 // ENEMY CLASS
 class Enemy{
-    constructor() {
+    constructor(name) {
         this.sprite = 'images/enemy-bug.png';
+        this.name = name;
+        this.speed = 1;
+    }
+
+    rePop(el) {
+        if (el.x >= 505 || el.x <= -101) {
+            let index = allEnemies.indexOf(el);
+            allEnemies.splice(index, 1);
+            console.log(leftOrRight[Math.abs(1-leftOrRight.indexOf(el.firstX))]);
+            createEnemy(String(index), leftOrRight[Math.abs(1-leftOrRight.indexOf(el.firstX))], el.y, el.speed);
+        }
     }
 
     update(dt) {
+        this.x = (this.speed * dt) + this.lastPos;
+        this.lastPos = this.x;
+        this.rePop(this);
         // You should multiply any movement by the dt parameter
         // which will ensure the game runs at the same speed for
         // all computers.
@@ -31,13 +44,32 @@ class Enemy{
 // This class requires an update(), render() and
 // a handleInput() method.
 
+// PLAYER CLASS
 class Player{
     constructor(){
         this.sprite = 'images/char-boy.png';
+        this.x = 2 * 101;
+        this.y = (5 * 83) - (83/2);
+        this.collision = false;
+        this.reachedEnd = false;
+
+        this.dx = this.x;
+        this.dy = this.y;
     }
 
-    update(dt) {
+    checkCollision() {
+        allEnemies.forEach(singleCheckCollision.bind(player));
+        function singleCheckCollision(el) {
+            if ( ((this.x>=(el.x-101/2))&&(this.x<=(el.x+101/2))) && ((this.y>=(el.y-101/2))&&(this.y<=(el.y+101/2))) ) {
+                this.collision = true;
+            };
+        };
+    }
 
+    update() {
+        this.x = this.dx;
+        this.y = this.dy;
+        this.checkCollision();
     }
 
     render() {
@@ -47,30 +79,70 @@ class Player{
     handleInput(usrinput) {
         switch (usrinput) {
             case "left":
-                this.x -= 1;
+                if (this.x > 0) {
+                    this.dx = this.x - 101;
+                }
                 break;
             case "right":
-                this.x += 1;
+                if (this.x < 404) {
+                    this.dx = this.x + 101;
+                }
                 break;
             case "up":
-                this.y -= 1;
+                if (this.y > yStartHeight) {
+                    this.dy = this.y - 83;
+                } else {
+                    this.reachedEnd = true;
+                }
                 break;
             case "down":
-                this.y += 1;
+                if (this.y < 415 - yStartHeight) {
+                    this.dy = this.y + 83;
+                }
         }
     }
 }
 
+
 // instantiate player character
-const player = new Player();
+// player Player() instantiated dynamically from reset()
 
 // instantiate enemies
-let rand = Math.floor(Math.random() * 5);
+
 const allEnemies = [];
 
-for (let i = 0; i < rand; i++) {
-    allEnemies.push(new Enemy())
+const yStartHeight  = 83/2;
+const yHeight = 83;
+const YPos = [0, yHeight, yHeight * 2];
+const startYPos = YPos.map( y => y + yStartHeight );
+const leftOrRight = [-101, 505];
+
+
+let maxEnemies = 1; //changes in engine.js depending on level
+
+function initEnemies() {
+    let rand = Math.floor(1 + (Math.random() * maxEnemies)); /*create random number of bugs var*/
+
+    allEnemies.length = 0;
+    for (let i = 0; i < rand; i++) { createEnemy(String(i)) };
 }
+
+
+function createEnemy(name, x=leftOrRight[Math.floor(Math.random()+1/2)], y=startYPos[Math.floor(Math.random()*startYPos.length)], speed=40+Math.floor(Math.random()*100)) {
+    let enemy = new Enemy(name);
+    enemy.speed = speed;
+    enemy.x = x;
+    enemy.firstX = x;
+    enemy.y = y;
+    enemy.lastPos = enemy.x;
+    if (enemy.x == leftOrRight[1]) {
+        enemy.speed *= -1;
+        enemy.sprite = 'images/enemy-bug-reverse.png';
+    };
+    allEnemies.push(enemy);
+}
+
+
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -81,7 +153,7 @@ for (let i = 0; i < rand; i++) {
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
+    const allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',

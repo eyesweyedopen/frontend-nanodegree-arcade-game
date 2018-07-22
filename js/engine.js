@@ -1,3 +1,4 @@
+
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
@@ -55,7 +56,17 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+        if (!player.collision && !player.reachedEnd) {
+            win.requestAnimationFrame(main);
+        } else {
+            if (player.reachedEnd) {
+                console.log("You win");
+                maxEnemies++;
+            } else {
+                console.log("You lose");
+            };
+            init();
+        };
     }
 
     /* This function does some initial setup that should only occur once,
@@ -117,6 +128,8 @@ var Engine = (function(global) {
             numRows = 6,
             numCols = 5,
             row, col;
+            width = 101;
+            height = 83;
         
         // Before drawing, clear existing canvas
         ctx.clearRect(0,0,canvas.width,canvas.height)
@@ -125,6 +138,7 @@ var Engine = (function(global) {
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
          */
+
         for (row = 0; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
                 /* The drawImage function of the canvas' context element
@@ -134,7 +148,7 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                ctx.drawImage(Resources.get(rowImages[row]), col * width, row * height);
             }
         }
 
@@ -161,6 +175,8 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
+        this.player = new Player();
+        initEnemies();
         // noop
     }
 
@@ -173,6 +189,7 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
+        'images/enemy-bug-reverse.png',
         'images/char-boy.png'
     ]);
     Resources.onReady(init);
