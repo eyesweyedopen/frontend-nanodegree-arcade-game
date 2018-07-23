@@ -61,7 +61,10 @@ var Engine = (function(global) {
         } else {
             if (player.reachedEnd) {
                 console.log("You win");
-                maxEnemies++;
+                while (maxEnemies < 6) {
+                    maxEnemies++;
+                }
+                custSpeed += 5;
             } else {
                 console.log("You lose");
             };

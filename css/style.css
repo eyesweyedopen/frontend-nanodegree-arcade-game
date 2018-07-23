@@ -54,3 +54,11 @@ button {
     grid-row: span 2;
     order: 4;
 }
+
+/* modals */
+#modalBackground {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(25, 25, 25, 0.2);
+}

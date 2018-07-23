@@ -19,8 +19,7 @@ class Enemy{
         if (el.x >= 505 || el.x <= -101) {
             let index = allEnemies.indexOf(el);
             allEnemies.splice(index, 1);
-            console.log(leftOrRight[Math.abs(1-leftOrRight.indexOf(el.firstX))]);
-            createEnemy(String(index), leftOrRight[Math.abs(1-leftOrRight.indexOf(el.firstX))], el.y, el.speed);
+            createEnemy(String(index), leftOrRight[leftOrRight.indexOf(el.firstX)], el.y, el.speed);
         }
     }
 
@@ -119,21 +118,24 @@ const leftOrRight = [-101, 505];
 
 
 let maxEnemies = 1; //changes in engine.js depending on level
+let custSpeed = 20; //changes in engine.js depending on level
 
 function initEnemies() {
     let rand = Math.floor(1 + (Math.random() * maxEnemies)); /*create random number of bugs var*/
 
+    // reset allEnemies for the reset() callback
     allEnemies.length = 0;
     for (let i = 0; i < rand; i++) { createEnemy(String(i)) };
 }
 
 
-function createEnemy(name, x=leftOrRight[Math.floor(Math.random()+1/2)], y=startYPos[Math.floor(Math.random()*startYPos.length)], speed=40+Math.floor(Math.random()*100)) {
+function createEnemy(name, x=leftOrRight[Math.floor(Math.random()+1/2)], y=startYPos[Math.floor(Math.random()*startYPos.length)], speed=custSpeed+Math.floor(Math.random()*100)) {
     let enemy = new Enemy(name);
     enemy.speed = speed;
     enemy.x = x;
     enemy.firstX = x;
     enemy.y = y;
+    // lastPos to be used in Player.update()
     enemy.lastPos = enemy.x;
     if (enemy.x == leftOrRight[1]) {
         enemy.speed *= -1;
