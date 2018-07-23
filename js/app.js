@@ -7,11 +7,23 @@
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 
-// ENEMY CLASS
-class Enemy{
-    constructor(name) {
-        this.sprite = 'images/enemy-bug.png';
+
+// CHARACTER CLASS
+class Character {
+    constructor(name, sprite) {
+        this.sprite = sprite;
         this.name = name;
+    }
+
+    render() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+}
+
+// ENEMY CLASS
+class Enemy extends Character {
+    constructor(name, sprite='images/enemy-bug.png') {
+        super(name, sprite);
         this.speed = 1;
     }
 
@@ -31,10 +43,6 @@ class Enemy{
         // which will ensure the game runs at the same speed for
         // all computers.
     }
-
-    render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    }
 }
 
 // Draw the enemy on the screen, required method for game
@@ -44,9 +52,9 @@ class Enemy{
 // a handleInput() method.
 
 // PLAYER CLASS
-class Player{
-    constructor(){
-        this.sprite = 'images/char-boy.png';
+class Player extends Character {
+    constructor(sprite='images/char-boy.png'){
+        super(undefined, sprite);
         this.x = 2 * 101;
         this.y = (5 * 83) - (83/2);
         this.collision = false;
@@ -69,10 +77,6 @@ class Player{
         this.x = this.dx;
         this.y = this.dy;
         this.checkCollision();
-    }
-
-    render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
     }
 
     handleInput(usrinput) {
@@ -130,7 +134,7 @@ function initEnemies() {
 
 
 function createEnemy(name, x=leftOrRight[Math.floor(Math.random()+1/2)], y=startYPos[Math.floor(Math.random()*startYPos.length)], speed=custSpeed+Math.floor(Math.random()*100)) {
-    let enemy = new Enemy(name);
+    const enemy = new Enemy(name);
     enemy.speed = speed;
     enemy.x = x;
     enemy.firstX = x;
