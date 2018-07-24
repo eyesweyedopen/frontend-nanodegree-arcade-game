@@ -24,6 +24,8 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
+        start = Date.now(); // time delay for level display
+        level = 1; // current level
 
     canvas.width = 505;
     canvas.height = 606;
@@ -62,7 +64,7 @@ var Engine = (function(global) {
             win.requestAnimationFrame(main);
         } else {
             if (player.reachedEnd) {
-                console.log("You win");
+                level++
                 while (maxEnemies < 6) {
                     maxEnemies++;
                 }
@@ -79,6 +81,7 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
+        start = Date.now();
         reset();
         lastTime = Date.now();
         main();
@@ -157,7 +160,20 @@ var Engine = (function(global) {
             }
         }
 
+        
+        if (lastTime - start < 2500) {
+            this.player.active = false; // prevents movement during level display (handleInput())
+            displayLevel();
+        }
+
         renderEntities();
+    }
+
+    function displayLevel() {
+        ctx.textAlign = 'center';
+        ctx.font = '3em calibri';
+        ctx.strokeStyle = 'black';
+        ctx.strokeText(`Level ${level}`, 101*5/2, (83*4)+(83/2));
     }
 
     /* This function is called by the render function and is called on each game
@@ -180,7 +196,7 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {        
-        this.player = new Player();
+        this.player = new Player();  
         initEnemies();
         // noop
     }
