@@ -1,14 +1,23 @@
-// Enemies our player must avoid
-   // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+const allEnemies = [];  // holds all enemy objects
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+function posDetails() {
+    this.leftOrRight = [-101, 505],             // bug spawn x-location for random generator 
+    this.yStartHeight = 83/2,                                             // offset for the y-coordinates 
+    this.yHeight = 83,                                                    // row height
+    this.xWidth = 101,                                                    // column width
+    this.startYPos = [0, this.yHeight, this.yHeight * 2].map(y => y + this.yStartHeight)  // bug spawn y-location for random generator
+}
+    
 
 
-// CHARACTER CLASS
+let maxEnemies = 1; //changes in engine.js depending on level
+let custSpeed = 20; //changes in engine.js depending on level
+
+
+/*
+ *CHARACTER CLASS
+ */
+
 class Character {
     constructor(name, sprite) {
         this.sprite = sprite;
@@ -20,18 +29,37 @@ class Character {
     }
 }
 
-// ENEMY CLASS
+/*
+ *ENEMY CLASS
+ */
+
 class Enemy extends Character {
     constructor(name, sprite='images/enemy-bug.png') {
         super(name, sprite);
         this.speed = 1;
     }
 
+    createEnemy(name, x=posDetails.leftOrRight[Math.floor(Math.random()+1/2)], y=posDetails.startYPos[Math.floor(Math.random()*posDetails.startYPos.length)], speed=custSpeed+Math.floor(Math.random()*100)) {
+        
+        const enemy = new Enemy(name);
+        enemy.speed = speed;
+        enemy.x = x;
+        enemy.firstX = x;
+        enemy.y = y;
+        enemy.lastPos = enemy.x; // lastPos to be used in Player.update()
+        if (enemy.x == posDetails.leftOrRight[1]) {
+            enemy.speed *= -1;
+            enemy.sprite = 'images/enemy-bug-reverse.png';
+        };
+        allEnemies.push(enemy);
+    }
+    
+
     rePop(el) {
         if (el.x >= 505 || el.x <= -101) {
             let index = allEnemies.indexOf(el);
             allEnemies.splice(index, 1);
-            createEnemy(String(index), leftOrRight[leftOrRight.indexOf(el.firstX)], el.y, el.speed);
+            this.createEnemy(String(index), posDetails.leftOrRight[posDetails.leftOrRight.indexOf(el.firstX)], el.y, el.speed);
         }
     }
 
@@ -48,15 +76,15 @@ class Enemy extends Character {
 // Draw the enemy on the screen, required method for game
 
 // Now write your own player class
-// This class requires an update(), render() and
+// This class requireposDetails.s an update(), render() and
 // a handleInput() method.
 
 // PLAYER CLASS
 class Player extends Character {
     constructor(sprite='images/char-boy.png'){
         super(undefined, sprite);
-        this.x = 2 * 101;
-        this.y = (5 * 83) - (83/2);
+        this.x = 2 * posDetails.xWidth;
+        this.y = (5 * posDetails.yHeight) - posDetails.yStartHeight;
         this.collision = false;
         this.reachedEnd = false;
 
@@ -83,24 +111,24 @@ class Player extends Character {
         switch (usrinput) {
             case "left":
                 if (this.x > 0) {
-                    this.dx = this.x - 101;
+                    this.dx = this.x - posDetails.xWidth;
                 }
                 break;
             case "right":
                 if (this.x < 404) {
-                    this.dx = this.x + 101;
+                    this.dx = this.x + posDetails.xWidth;
                 }
                 break;
             case "up":
-                if (this.y > yStartHeight) {
-                    this.dy = this.y - 83;
+                if (this.y > posDetails.yStartHeight) {
+                    this.dy = this.y - posDetails.yHeight;
                 } else {
                     this.reachedEnd = true;
                 }
                 break;
             case "down":
-                if (this.y < 415 - yStartHeight) {
-                    this.dy = this.y + 83;
+                if (this.y < 415 - posDetails.yStartHeight) {
+                    this.dy = this.y + posDetails.yHeight;
                 }
         }
     }
@@ -112,43 +140,14 @@ class Player extends Character {
 
 // instantiate enemies
 
-const allEnemies = [];
-
-const yStartHeight  = 83/2;
-const yHeight = 83;
-const YPos = [0, yHeight, yHeight * 2];
-const startYPos = YPos.map( y => y + yStartHeight );
-const leftOrRight = [-101, 505];
-
-
-let maxEnemies = 1; //changes in engine.js depending on level
-let custSpeed = 20; //changes in engine.js depending on level
 
 function initEnemies() {
     let rand = Math.floor(1 + (Math.random() * maxEnemies)); /*create random number of bugs var*/
 
     // reset allEnemies for the reset() callback
     allEnemies.length = 0;
-    for (let i = 0; i < rand; i++) { createEnemy(String(i)) };
+    for (let i = 0; i < rand; i++) { Enemy.prototype.createEnemy(String(i)) };
 }
-
-
-function createEnemy(name, x=leftOrRight[Math.floor(Math.random()+1/2)], y=startYPos[Math.floor(Math.random()*startYPos.length)], speed=custSpeed+Math.floor(Math.random()*100)) {
-    const enemy = new Enemy(name);
-    enemy.speed = speed;
-    enemy.x = x;
-    enemy.firstX = x;
-    enemy.y = y;
-    // lastPos to be used in Player.update()
-    enemy.lastPos = enemy.x;
-    if (enemy.x == leftOrRight[1]) {
-        enemy.speed *= -1;
-        enemy.sprite = 'images/enemy-bug-reverse.png';
-    };
-    allEnemies.push(enemy);
-}
-
-
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
