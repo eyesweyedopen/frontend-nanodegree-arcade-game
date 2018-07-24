@@ -1,5 +1,7 @@
 const allEnemies = [];  // holds all enemy objects
 
+
+/* Position Details global Object initialized in engine.js */
 function posDetails() {
     this.leftOrRight = [-101, 505],             // bug spawn x-location for random generator 
     this.yStartHeight = 83/2,                                             // offset for the y-coordinates 
@@ -39,7 +41,7 @@ class Enemy extends Character {
         this.speed = 1;
     }
 
-    createEnemy(name, x=posDetails.leftOrRight[Math.floor(Math.random()+1/2)], y=posDetails.startYPos[Math.floor(Math.random()*posDetails.startYPos.length)], speed=custSpeed+Math.floor(Math.random()*100)) {
+    createEnemy(name, x=posDetails.leftOrRight[Math.floor(Math.random()+1/2)], y=posDetails.startYPos[Math.floor(Math.random()*posDetails.startYPos.length)], speed=custSpeed+Math.floor(Math.random()*100), repopped=false) {
         
         const enemy = new Enemy(name);
         enemy.speed = speed;
@@ -48,10 +50,10 @@ class Enemy extends Character {
         enemy.y = y;
         enemy.lastPos = enemy.x; // lastPos to be used in Player.update()
         if (enemy.x == posDetails.leftOrRight[1]) {
-            enemy.speed *= -1;
+            enemy.speed *= -1;  //change enemy direction
             enemy.sprite = 'images/enemy-bug-reverse.png';
         };
-        allEnemies.push(enemy);
+        repopped ? allEnemies.push(enemy) : window.setTimeout(function() {allEnemies.push(enemy)}, (Math.random() * 2500));  // add to allEnemies at random times
     }
     
 
@@ -59,7 +61,7 @@ class Enemy extends Character {
         if (el.x >= 505 || el.x <= -101) {
             let index = allEnemies.indexOf(el);
             allEnemies.splice(index, 1);
-            this.createEnemy(String(index), posDetails.leftOrRight[posDetails.leftOrRight.indexOf(el.firstX)], el.y, el.speed);
+            this.createEnemy(String(index), posDetails.leftOrRight[posDetails.leftOrRight.indexOf(el.firstX)], el.y, el.speed, true);
         }
     }
 
