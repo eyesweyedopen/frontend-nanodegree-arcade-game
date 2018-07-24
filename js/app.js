@@ -104,34 +104,39 @@ class Player extends Character {
     }
 
     update() {
+        this.active = true;
         this.x = this.dx;
         this.y = this.dy;
         this.checkCollision();
     }
 
     handleInput(usrinput) {
-        switch (usrinput) {
-            case "left":
-                if (this.x > 0) {
-                    this.dx = this.x - posDetails.xWidth;
-                }
-                break;
-            case "right":
-                if (this.x < 404) {
-                    this.dx = this.x + posDetails.xWidth;
-                }
-                break;
-            case "up":
-                if (this.y > posDetails.yStartHeight) {
-                    this.dy = this.y - posDetails.yHeight;
-                } else {
-                    this.reachedEnd = true;
-                }
-                break;
-            case "down":
-                if (this.y < 415 - posDetails.yStartHeight) {
-                    this.dy = this.y + posDetails.yHeight;
-                }
+        console.log(this);
+        console.log(this.active);
+        if (this.active) {
+            switch (usrinput) {
+                case "left":
+                    if (this.x > 0) {
+                        this.dx = this.x - posDetails.xWidth;
+                    }
+                    break;
+                case "right":
+                    if (this.x < 404) {
+                        this.dx = this.x + posDetails.xWidth;
+                    }
+                    break;
+                case "up":
+                    if (this.y > posDetails.yStartHeight) {
+                        this.dy = this.y - posDetails.yHeight;
+                    } else {
+                        this.reachedEnd = true;
+                    }
+                    break;
+                case "down":
+                    if (this.y < 415 - posDetails.yStartHeight) {
+                        this.dy = this.y + posDetails.yHeight;
+                    }
+            }
         }
     }
 }
