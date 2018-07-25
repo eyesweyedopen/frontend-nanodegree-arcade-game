@@ -14,6 +14,26 @@
  * writing app.js a little simpler to work with.
  */
 
+
+    
+/*Intro sequence*/
+const intro = (function introSeq() {
+
+    const modalBack = document.getElementById('modalBackground');
+    const introModal = document.getElementById('introModal');
+
+    introModal.classList.toggle('init');
+
+    document.getElementById('start').addEventListener('click', function(e){
+        e.preventDefault();
+        introModal.classList.toggle('init');
+        modalBack.style.opacity = 0;
+        this.introDone = true;
+        console.log(this);
+    }.bind(Engine));
+
+})();
+
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -24,32 +44,10 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime,
-        introDone, // time delay for levels display
+        // introDone, // time delay for levels display
         start, // time delay for level 1 display
         level = 1; // current level
         
-    const modalBack = doc.getElementById('modalBackground');
-    
-    /*Intro sequence*/
-    function introSeq() {
-        while (true) {
-            if (!this.introDisplay) {
-                const introModal = doc.getElementById('introModal');
-    
-                doc.getElementById('start').addEventListener('click', function(e){
-                    e.preventDefault();
-                    introModal.classList.toggle('init');
-                    modalBack.style.opacity = 0;
-                    this.introDisplay = false;
-                    introDone = true;
-                    main();
-                });
-    
-                introModal.classList.toggle('init');
-                break;
-            }
-        }
-    }
 
     canvas.width = 505;
     canvas.height = 606;
@@ -105,12 +103,9 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
-        introSeq();
-        while (!introDone) {
-            lastTime = Date.now();
-            delayMovement();
-        }
+        reset(); 
+        lastTime = Date.now();
+        start = Date.now();
         main();
     }
 
@@ -187,11 +182,15 @@ var Engine = (function(global) {
             }
         }
 
+        delayMovement();
+
         renderEntities();
     }
 
     function delayMovement() {
-        start = Date.now();
+        if (!this.introDone) {
+            start = Date.now();
+        }
         if (lastTime - start < 2500) {
             this.player.active = false; // prevents movement during level display (handleInput())
             displayLevel();

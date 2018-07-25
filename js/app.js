@@ -111,8 +111,6 @@ class Player extends Character {
     }
 
     handleInput(usrinput) {
-        console.log(this);
-        console.log(this.active);
         if (this.active) {
             switch (usrinput) {
                 case "left":
