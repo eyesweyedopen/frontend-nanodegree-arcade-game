@@ -23,9 +23,33 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
-        start = Date.now(); // time delay for level display
+        lastTime,
+        introDone, // time delay for levels display
+        start, // time delay for level 1 display
         level = 1; // current level
+        
+    const modalBack = doc.getElementById('modalBackground');
+    
+    /*Intro sequence*/
+    function introSeq() {
+        while (true) {
+            if (!this.introDisplay) {
+                const introModal = doc.getElementById('introModal');
+    
+                doc.getElementById('start').addEventListener('click', function(e){
+                    e.preventDefault();
+                    introModal.classList.toggle('init');
+                    modalBack.style.opacity = 0;
+                    this.introDisplay = false;
+                    introDone = true;
+                    main();
+                });
+    
+                introModal.classList.toggle('init');
+                break;
+            }
+        }
+    }
 
     canvas.width = 505;
     canvas.height = 606;
@@ -81,9 +105,12 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        start = Date.now();
         reset();
-        lastTime = Date.now();
+        introSeq();
+        while (!introDone) {
+            lastTime = Date.now();
+            delayMovement();
+        }
         main();
     }
 
@@ -160,13 +187,15 @@ var Engine = (function(global) {
             }
         }
 
-        
+        renderEntities();
+    }
+
+    function delayMovement() {
+        start = Date.now();
         if (lastTime - start < 2500) {
             this.player.active = false; // prevents movement during level display (handleInput())
             displayLevel();
         }
-
-        renderEntities();
     }
 
     function displayLevel() {

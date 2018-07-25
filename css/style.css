@@ -1,5 +1,6 @@
 body, div {
     text-align: center;
+    box-sizing: border-box;
 }
 
 .flex-container {
@@ -57,8 +58,28 @@ button {
 
 /* modals */
 #modalBackground {
+    display: flex;
+    justify-content: center;
     position: absolute;
+    margin: 0 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(25, 25, 25, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
+    transition-duration: 2s;
+}
+
+#introModal {
+    padding: 1em;
+    background-color: #c1d3f8;
+    display: block;
+    position: absolute;
+    width: 25vw;
+    min-height: 25vh;
+    height: min-content;
+    top: -50vh;
+    transition-duration: 2s;
+}
+
+.init { 
+    transform: translate(0, 75vh);
 }

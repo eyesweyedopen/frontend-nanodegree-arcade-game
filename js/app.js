@@ -104,7 +104,7 @@ class Player extends Character {
     }
 
     update() {
-        this.active = true;
+        this.active = true;  //allow player movement
         this.x = this.dx;
         this.y = this.dy;
         this.checkCollision();
