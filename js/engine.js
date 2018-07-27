@@ -22,15 +22,18 @@ const intro = (function introSeq() {
     const modalBack = document.getElementById('modalBackground');
     const introModal = document.getElementById('introModal');
 
-    introModal.classList.toggle('init');
+    introModal.classList.toggle('initIntro');
 
-    document.getElementById('start').addEventListener('click', function(e){
+    this.callback = function(e) {
         e.preventDefault();
-        introModal.classList.toggle('init');
+        introModal.classList.toggle('initIntro');
         modalBack.style.opacity = 0;
         this.introDone = true;
         console.log(this);
-    }.bind(Engine));
+        return introDone;
+    }
+
+    document.getElementById('start').addEventListener('click', callback.bind(this));
 
 })();
 
@@ -89,14 +92,36 @@ var Engine = (function(global) {
                 level++
                 while (maxEnemies < 6) {
                     maxEnemies++;
+                    break;
                 }
                 custSpeed += 5;
+                init();
             } else {
                 console.log("You lose");
+                const endModal = document.querySelector("#endGameModal");
+                const modalBack = document.querySelector('#modalBackground');
+                const restart = document.querySelector('#restart');
+                endModal.classList.toggle('initEnd');
+                modalBack.style.opacity = 1;
+
+                
+                function endGameDisplay() {
+                    console.log("stop");
+                    endModal.classList.toggle('initEnd');
+                    modalBack.style.opacity = 0;
+                    restart.removeEventListener('click', endGameDisplay);
+                    level = 1; // reset to level 1
+                    maxEnemies = 1; // reset to initial state in app.js
+                    custSpeed = 20; // reset to initial state in app.js   
+                    init();
+                };
+
+                restart.addEventListener('click', endGameDisplay);
             };
-            init();
         };
     }
+
+
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -131,7 +156,7 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
+        posDetails.allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
         player.update();
@@ -191,17 +216,19 @@ var Engine = (function(global) {
         if (!this.introDone) {
             start = Date.now();
         }
-        if (lastTime - start < 2500) {
+        if (lastTime - start < 3000) {
             this.player.active = false; // prevents movement during level display (handleInput())
             displayLevel();
         }
     }
 
     function displayLevel() {
+        let time = ("0000" + (lastTime - start)).substr(-4,4);  //formatted countdown var;
         ctx.textAlign = 'center';
         ctx.font = '3em calibri';
         ctx.strokeStyle = 'black';
         ctx.strokeText(`Level ${level}`, 101*5/2, (83*4)+(83/2));
+        ctx.strokeText(`${3 - time[0]}`, (101*5)/2, (83*3)+(83/2));
     }
 
     /* This function is called by the render function and is called on each game
@@ -212,21 +239,16 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
+        posDetails.allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
         player.render();
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
-     */
-    function reset() {        
-        this.player = new Player();  
+    function reset() {     
+        this.player = new Player();
         initEnemies();
-        // noop
     }
 
     /* Go ahead and load all of the images we know we're going to need to

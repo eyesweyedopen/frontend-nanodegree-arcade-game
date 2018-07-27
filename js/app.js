@@ -1,4 +1,3 @@
-const allEnemies = [];  // holds all enemy objects
 
 
 /* Position Details global Object initialized in engine.js */
@@ -7,7 +6,8 @@ function posDetails() {
     this.yStartHeight = 83/2,                                             // offset for the y-coordinates 
     this.yHeight = 83,                                                    // row height
     this.xWidth = 101,                                                    // column width
-    this.startYPos = [0, this.yHeight, this.yHeight * 2].map(y => y + this.yStartHeight)  // bug spawn y-location for random generator
+    this.startYPos = [0, this.yHeight, this.yHeight * 2].map(y => y + this.yStartHeight),  // bug spawn y-location for random generator
+    this.allEnemies = []  // holds all enemy objects
 }
     
 
@@ -24,10 +24,12 @@ class Character {
     constructor(name, sprite) {
         this.sprite = sprite;
         this.name = name;
+        this.width = 101;
+        this.height = 171;
     }
 
     render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
     }
 }
 
@@ -53,14 +55,14 @@ class Enemy extends Character {
             enemy.speed *= -1;  //change enemy direction
             enemy.sprite = 'images/enemy-bug-reverse.png';
         };
-        repopped ? allEnemies.push(enemy) : window.setTimeout(function() {allEnemies.push(enemy)}, (Math.random() * 2500));  // add to allEnemies at random times
+        repopped ? posDetails.allEnemies.push(enemy) : window.setTimeout(function() {posDetails.allEnemies.push(enemy)}, (Math.random() * 2500));  // add to allEnemies at random times
     }
     
 
     rePop(el) {
         if (el.x >= 505 || el.x <= -101) {
-            let index = allEnemies.indexOf(el);
-            allEnemies.splice(index, 1);
+            let index = posDetails.allEnemies.indexOf(el);
+            posDetails.allEnemies.splice(index, 1);
             this.createEnemy(String(index), posDetails.leftOrRight[posDetails.leftOrRight.indexOf(el.firstX)], el.y, el.speed, true);
         }
     }
@@ -94,11 +96,16 @@ class Player extends Character {
         this.dy = this.y;
     }
 
+    dieSequence() {
+        this.active = false;
+    }
+
     checkCollision() {
-        allEnemies.forEach(singleCheckCollision.bind(player));
+        posDetails.allEnemies.forEach(singleCheckCollision.bind(player));
         function singleCheckCollision(el) {
             if ( ((this.x>=(el.x-101/2))&&(this.x<=(el.x+101/2))) && ((this.y>=(el.y-101/2))&&(this.y<=(el.y+101/2))) ) {
                 this.collision = true;
+                this.dieSequence();
             };
         };
     }
@@ -140,25 +147,16 @@ class Player extends Character {
 }
 
 
-// instantiate player character
 // player Player() instantiated dynamically from reset()
 
 // instantiate enemies
-
-
 function initEnemies() {
     let rand = Math.floor(1 + (Math.random() * maxEnemies)); /*create random number of bugs var*/
 
     // reset allEnemies for the reset() callback
-    allEnemies.length = 0;
-    for (let i = 0; i < rand; i++) { Enemy.prototype.createEnemy(String(i)) };
+    posDetails.allEnemies.length = 0;
+    for (let i = 0; i < rand; i++) { Enemy.prototype.createEnemy(String(i+1)) };
 }
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

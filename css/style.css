@@ -68,18 +68,53 @@ button {
     transition-duration: 2s;
 }
 
-#introModal {
+.modal {
     padding: 1em;
     background-color: #c1d3f8;
     display: block;
     position: absolute;
+    transition-duration: 2s;
+}
+
+#introModal {
     width: 25vw;
     min-height: 25vh;
     height: min-content;
     top: -50vh;
-    transition-duration: 2s;
 }
 
-.init { 
+#endGameModal {
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 25vh auto;
+    font-size: 0.5rem;
+    display: none;
+    width: 12.5vw;
+    height: 12.5vh;
+    text-align: center;
+}
+
+#restart {
+    width: 5em;
+    height: 1.5em;
+    background-color: #24388f;
+    text-decoration-color: #424141;
+}
+
+#restart:hover {
+    background-color: #16297e;
+    text-decoration-color: #4e4b4b;
+    transition-duration: .5s;
+    cursor: pointer;
+}
+
+div.initIntro { 
     transform: translate(0, 75vh);
+}
+
+div#endGameModal.initEnd {    
+    display: flex;
+    transform: scale(2);
 }
