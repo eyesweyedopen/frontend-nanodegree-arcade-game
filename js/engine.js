@@ -97,26 +97,33 @@ var Engine = (function(global) {
                 custSpeed += 5;
                 init();
             } else {
-                console.log("You lose");
-                const endModal = document.querySelector("#endGameModal");
-                const modalBack = document.querySelector('#modalBackground');
-                const restart = document.querySelector('#restart');
-                endModal.classList.toggle('initEnd');
-                modalBack.style.opacity = 1;
+                endGameDisplay.bind(endGameDisplay)();
+
+
+                function endGameDisplay() {
+                    this.endModal = document.querySelector("#endGameModal");
+                    this.modalBack = document.querySelector('#modalBackground');
+                    this.restart = document.querySelector('#restart');
+
+                    // this.endModal.innerHTML = `h1`
+                    this.endModal.classList.toggle('initEnd');
+                    this.modalBack.style.opacity = 1;
+                    this.restart.addEventListener('click', endGameToggle.bind(endGameDisplay));
+                    };
 
                 
-                function endGameDisplay() {
+                function endGameToggle() {
                     console.log("stop");
-                    endModal.classList.toggle('initEnd');
-                    modalBack.style.opacity = 0;
-                    restart.removeEventListener('click', endGameDisplay);
+                    console.log(this);
+                    this.endModal.classList.toggle('initEnd');
+                    this.modalBack.style.opacity = 0;
+                    this.restart.removeEventListener('click', endGameToggle);
                     level = 1; // reset to level 1
                     maxEnemies = 1; // reset to initial state in app.js
                     custSpeed = 20; // reset to initial state in app.js   
                     init();
                 };
 
-                restart.addEventListener('click', endGameDisplay);
             };
         };
     }
