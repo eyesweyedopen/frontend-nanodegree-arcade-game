@@ -1,8 +1,8 @@
-#frontend-nanodegree-arcade-game
+# Ladybugger
 ===============================
 You can try out the game here: https://eyesweyedopen.github.io/frontend-nanodegree-arcade-game/
 
-##Instructions
+## Instructions
 1. Use the directional keys to navigate your Buddy to the lake.
 2. Avoid the evil Lady Bug's minions.
 3. Other stuff, trust me.
