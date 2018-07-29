@@ -57,7 +57,6 @@ class Enemy extends Character {
                 enemy.sprite = 'images/enemy-bug-reverse.png';
             };
             repopped ? posDetails.allEnemies.push(enemy) : window.setTimeout(function() {posDetails.allEnemies.push(enemy)}, (Math.random() * 2500));  // add to allEnemies at random times
-            posDetails.enemyName.push(enemy.name);
         };
 
     }
