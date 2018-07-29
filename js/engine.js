@@ -100,6 +100,7 @@ var Engine = (function(global) {
                 endGameDisplay.bind(endGameDisplay)();
 
 
+
                 function endGameDisplay() {
                     this.endModal = document.querySelector("#endGameModal");
                     this.modalBack = document.querySelector('#modalBackground');
@@ -113,8 +114,6 @@ var Engine = (function(global) {
 
                 
                 function endGameToggle() {
-                    console.log("stop");
-                    console.log(this);
                     this.endModal.classList.toggle('initEnd');
                     this.modalBack.style.opacity = 0;
                     this.restart.removeEventListener('click', endGameToggle);
@@ -253,7 +252,10 @@ var Engine = (function(global) {
         player.render();
     }
 
-    function reset() {     
+    function reset() { 
+        posDetails.allEnemies.forEach(function(){   // reset allEnemies for the reset() callback
+            posDetails.allEnemies.pop();
+        });    
         this.player = new Player();
         initEnemies();
     }

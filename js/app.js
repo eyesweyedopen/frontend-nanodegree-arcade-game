@@ -7,7 +7,7 @@ function posDetails() {
     this.yHeight = 83,                                                    // row height
     this.xWidth = 101,                                                    // column width
     this.startYPos = [0, this.yHeight, this.yHeight * 2].map(y => y + this.yStartHeight),  // bug spawn y-location for random generator
-    this.allEnemies = []  // holds all enemy objects
+    this.allEnemies = [],  // holds all enemy objects
 }
     
 
@@ -45,25 +45,30 @@ class Enemy extends Character {
 
     createEnemy(name, x=posDetails.leftOrRight[Math.floor(Math.random()+1/2)], y=posDetails.startYPos[Math.floor(Math.random()*posDetails.startYPos.length)], speed=custSpeed+Math.floor(Math.random()*100), repopped=false) {
         
-        const enemy = new Enemy(name);
-        enemy.speed = speed;
-        enemy.x = x;
-        enemy.firstX = x;
-        enemy.y = y;
-        enemy.lastPos = enemy.x; // lastPos to be used in Player.update()
-        if (enemy.x == posDetails.leftOrRight[1]) {
-            enemy.speed *= -1;  //change enemy direction
-            enemy.sprite = 'images/enemy-bug-reverse.png';
+        if (Number(name) != 0) {
+            const enemy = new Enemy(name);
+            enemy.speed = speed;
+            enemy.x = x;
+            enemy.firstX = x;
+            enemy.y = y;
+            enemy.lastPos = enemy.x; // lastPos to be used in Enemy.update()
+            if (enemy.x == posDetails.leftOrRight[1]) {
+                enemy.speed *= -1;  //change enemy direction
+                enemy.sprite = 'images/enemy-bug-reverse.png';
+            };
+            repopped ? posDetails.allEnemies.push(enemy) : window.setTimeout(function() {posDetails.allEnemies.push(enemy)}, (Math.random() * 2500));  // add to allEnemies at random times
+            posDetails.enemyName.push(enemy.name);
         };
-        repopped ? posDetails.allEnemies.push(enemy) : window.setTimeout(function() {posDetails.allEnemies.push(enemy)}, (Math.random() * 2500));  // add to allEnemies at random times
+
     }
     
 
     rePop(el) {
-        if (el.x >= 505 || el.x <= -101) {
+        if (el.x > 505 || el.x < -101) {
             let index = posDetails.allEnemies.indexOf(el);
             posDetails.allEnemies.splice(index, 1);
-            this.createEnemy(String(index), posDetails.leftOrRight[posDetails.leftOrRight.indexOf(el.firstX)], el.y, el.speed, true);
+            this.createEnemy(String(index+1), posDetails.leftOrRight[posDetails.leftOrRight.indexOf(el.firstX)], el.y, el.speed, true);
+            console.log(`repopped enemy ${el.name}`);
         }
     }
 
@@ -153,8 +158,6 @@ class Player extends Character {
 function initEnemies() {
     let rand = Math.floor(1 + (Math.random() * maxEnemies)); /*create random number of bugs var*/
 
-    // reset allEnemies for the reset() callback
-    posDetails.allEnemies.length = 0;
     for (let i = 0; i < rand; i++) { Enemy.prototype.createEnemy(String(i+1)) };
 }
 
