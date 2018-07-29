@@ -7,7 +7,7 @@ function posDetails() {
     this.yHeight = 83,                                                    // row height
     this.xWidth = 101,                                                    // column width
     this.startYPos = [0, this.yHeight, this.yHeight * 2].map(y => y + this.yStartHeight),  // bug spawn y-location for random generator
-    this.allEnemies = [],  // holds all enemy objects
+    this.allEnemies = []  // holds all enemy objects
 }
     
 
