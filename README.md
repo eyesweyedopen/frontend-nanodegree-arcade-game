@@ -1,8 +1,12 @@
 # Ladybugger
-============================ \n
-You can try out the game here: https://eyesweyedopen.github.io/frontend-nanodegree-arcade-game/
 
-Help your Buddy run away from Evil Lady Bug!
+============================ 
+
+You can try out the game here:
+
+https://eyesweyedopen.github.io/frontend-nanodegree-arcade-game/
+
+### Help your Buddy run away from Evil Lady Bug!
 
 ## Instructions
 1. Use the directional keys to navigate your Buddy to the lake.
