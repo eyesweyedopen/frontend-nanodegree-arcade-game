@@ -15,3 +15,6 @@ https://eyesweyedopen.github.io/frontend-nanodegree-arcade-game/
 
 
 How far will you make it?
+
+
+All images and sprites provided by Udacity
