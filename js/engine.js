@@ -90,9 +90,8 @@ var Engine = (function(global) {
         } else {
             if (player.reachedEnd) {
                 level++
-                while (maxEnemies < 6) {
+                if (maxEnemies < 6) {
                     maxEnemies++;
-                    break;
                 }
                 custSpeed += 5;
                 init();
@@ -104,11 +103,20 @@ var Engine = (function(global) {
                 function endGameDisplay() {
                     this.endModal = document.querySelector("#endGameModal");
                     this.modalBack = document.querySelector('#modalBackground');
-                    this.restart = document.querySelector('#restart');
 
-                    // this.endModal.innerHTML = `h1`
                     this.endModal.classList.toggle('initEnd');
+                    this.endModal.innerHTML = `
+                    <h1>Level ${level}</h1>
+                    <p>You Died!</p>
+                    <p>Thanks for playing!  Hope you enjoyed!</p>
+                    <p>Go again?</p>
+                    <div id="restart" class="button">
+                        <p>Restart</p>
+                    </div>`
                     this.modalBack.style.opacity = 1;
+
+                    
+                    this.restart = document.querySelector('#restart');
                     this.restart.addEventListener('click', endGameToggle.bind(endGameDisplay));
                     };
 
@@ -252,11 +260,9 @@ var Engine = (function(global) {
         player.render();
     }
 
-    function reset() { 
-        posDetails.allEnemies.forEach(function(){   // reset allEnemies for the reset() callback
-            posDetails.allEnemies.pop();
-        });    
+    function reset() {  
         this.player = new Player();
+        posDetails.allEnemies.length = 0;
         initEnemies();
     }
 

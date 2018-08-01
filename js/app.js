@@ -43,10 +43,11 @@ class Enemy extends Character {
         this.speed = 1;
     }
 
-    createEnemy(name, x=posDetails.leftOrRight[Math.floor(Math.random()+1/2)], y=posDetails.startYPos[Math.floor(Math.random()*posDetails.startYPos.length)], speed=custSpeed+Math.floor(Math.random()*100), repopped=false) {
+    createEnemy(name, x=posDetails.leftOrRight[Math.floor(Math.random()+1/2)], y=posDetails.startYPos[Math.floor(Math.random()*posDetails.startYPos.length)], speed=custSpeed+Math.floor(Math.random()*100), repopped=false, active=false) {
         
         if (Number(name) != 0) {
             const enemy = new Enemy(name);
+            enemy.active = active;
             enemy.speed = speed;
             enemy.x = x;
             enemy.firstX = x;
@@ -56,7 +57,14 @@ class Enemy extends Character {
                 enemy.speed *= -1;  //change enemy direction
                 enemy.sprite = 'images/enemy-bug-reverse.png';
             };
-            repopped ? posDetails.allEnemies.push(enemy) : window.setTimeout(function() {posDetails.allEnemies.push(enemy)}, (Math.random() * 2500));  // add to allEnemies at random times
+            posDetails.allEnemies.splice(Number(name)-1, 0, enemy);
+
+            /* add to allEnemies at random times if new enemy */
+            if (!repopped) { 
+                window.setTimeout(function() {enemy.active = true}, (Math.random() * 2500)) 
+            } else {
+                enemy.active = true;
+            }
         };
 
     }
@@ -64,28 +72,21 @@ class Enemy extends Character {
 
     rePop(el) {
         if (el.x > 505 || el.x < -101) {
-            let index = posDetails.allEnemies.indexOf(el);
-            posDetails.allEnemies.splice(index, 1);
-            this.createEnemy(String(index+1), posDetails.leftOrRight[posDetails.leftOrRight.indexOf(el.firstX)], el.y, el.speed, true);
-            console.log(`repopped enemy ${el.name}`);
+            let index = Number(el.name);
+            posDetails.allEnemies.splice(index-1, 1);
+            this.createEnemy(String(index), posDetails.leftOrRight[posDetails.leftOrRight.indexOf(el.firstX)], el.y, el.speed, true);
         }
     }
 
     update(dt) {
-        this.x = (this.speed * dt) + this.lastPos;
-        this.lastPos = this.x;
-        this.rePop(this);
-        // You should multiply any movement by the dt parameter
-        // which will ensure the game runs at the same speed for
-        // all computers.
+        if (this.active) {    
+            this.x = (this.speed * dt) + this.lastPos;
+            this.lastPos = this.x;
+            this.rePop(this);
+        }
     }
 }
 
-// Draw the enemy on the screen, required method for game
-
-// Now write your own player class
-// This class requireposDetails.s an update(), render() and
-// a handleInput() method.
 
 // PLAYER CLASS
 class Player extends Character {
@@ -155,13 +156,16 @@ class Player extends Character {
 
 // instantiate enemies
 function initEnemies() {
-    let rand = Math.floor(1 + (Math.random() * maxEnemies)); /*create random number of bugs var*/
+    let rand = Math.floor(1 + (Math.random() * maxEnemies)); //create random number of bugs var
 
-    for (let i = 0; i < rand; i++) { Enemy.prototype.createEnemy(String(i+1)) };
+    posDetails.allEnemies.forEach(function(){   // reset allEnemies for the reset() callback
+        posDetails.allEnemies.pop();
+    });   
+    for (let i = 0; i < rand; i++) { Enemy.prototype.createEnemy(String(posDetails.allEnemies.length+1)) };
 }
 
 // This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Player.handleInput() method
 document.addEventListener('keyup', function(e) {
     const allowedKeys = {
         37: 'left',
