@@ -1,4 +1,5 @@
 body, div {
+    margin: 0;
     text-align: center;
     box-sizing: border-box;
 }
@@ -94,12 +95,6 @@ body, div {
     top: -50vh;
 }
 
-.initIntro #start {
-}
-
-#start:hover {
-}
-
 #endGameModal {
     
     width: 25vw;
@@ -120,12 +115,6 @@ body, div {
     height: 12.5vh;
     /* height: 12.5vh; */
     text-align: center; 
-}
-
-.initEnd #restart {
-}
-
-#restart:hover {
 }
 
 div.initIntro { 
