@@ -99,7 +99,7 @@ var Engine = (function(global) {
                 endGameDisplay.bind(endGameDisplay)();
 
 
-
+                /* to display the end game modal */
                 function endGameDisplay() {
                     this.endModal = document.querySelector("#endGameModal");
                     this.modalBack = document.querySelector('#modalBackground');
@@ -120,7 +120,7 @@ var Engine = (function(global) {
                     this.restart.addEventListener('click', endGameToggle.bind(endGameDisplay));
                     };
 
-                
+                /* to remove the end game modal and reset the game */
                 function endGameToggle() {
                     this.endModal.classList.toggle('initEnd');
                     this.modalBack.style.opacity = 0;
