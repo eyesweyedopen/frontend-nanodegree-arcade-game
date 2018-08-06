@@ -1,4 +1,4 @@
-
+// "use strict"
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
@@ -29,7 +29,6 @@ const intro = (function introSeq() {
         introModal.classList.toggle('initIntro');
         modalBack.style.opacity = 0;
         this.introDone = true;
-        console.log(this);
         return introDone;
     }
 
@@ -230,6 +229,7 @@ var Engine = (function(global) {
         if (!this.introDone) {
             start = Date.now();
         }
+
         if (lastTime - start < 3000) {
             this.player.active = false; // prevents movement during level display (handleInput())
             displayLevel();
