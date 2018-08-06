@@ -45,6 +45,7 @@ class Enemy extends Character {
 
     createEnemy() {
         this.x = posDetails.leftOrRight[Math.floor(Math.random() + 1/2)];
+        this.firstX = this.x;
         this.y = posDetails.startYPos[Math.floor(Math.random() * posDetails.startYPos.length)];
         this.speed = custSpeed + Math.floor(Math.random() * 100);
         this.active = true;
@@ -94,7 +95,7 @@ class Enemy extends Character {
 
     rePop() {
         if (this.x > 505 || this.x < -101) {
-            this.x = posDetails.leftOrRight[1 - posDetails.leftOrRight.indexOf(Math.floor(this.x))];
+            this.lastPos = this.firstX;
             this.repopped = true;
         }
     }
