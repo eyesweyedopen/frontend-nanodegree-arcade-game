@@ -126,14 +126,17 @@ class Player extends Character {
     }
 
     checkCollision() {
-        posDetails.allEnemies.forEach(singleCheckCollision.bind(player));
-        function singleCheckCollision(el) {
-            if ( ((this.x>=(el.x-101/2))&&(this.x<=(el.x+101/2))) && ((this.y>=(el.y-101/2))&&(this.y<=(el.y+101/2))) ) {
-                this.collision = true;
-                this.dieSequence();
-            };
-        };
+        posDetails.allEnemies.forEach(function(el) {
+            this.singleCheckCollision(el);
+        }.bind(player));
     }
+
+    singleCheckCollision(el) {
+        if ( ((this.x>=(el.x-101/2))&&(this.x<=(el.x+101/2))) && ((this.y>=(el.y-101/2))&&(this.y<=(el.y+101/2))) ) {
+            this.collision = true;
+            this.dieSequence();
+        };
+    };
 
     update() {
         this.active = true;  //allow player movement
@@ -145,24 +148,24 @@ class Player extends Character {
             switch (usrinput) {
                 case "left":
                     if (this.x > 0) {
-                        this.dx = this.x - posDetails.xWidth;
+                        this.x = this.x - posDetails.xWidth;
                     }
                     break;
                 case "right":
                     if (this.x < 404) {
-                        this.dx = this.x + posDetails.xWidth;
+                        this.x = this.x + posDetails.xWidth;
                     }
                     break;
                 case "up":
                     if (this.y > posDetails.yStartHeight) {
-                        this.dy = this.y - posDetails.yHeight;
+                        this.y = this.y - posDetails.yHeight;
                     } else {
                         this.reachedEnd = true;
                     }
                     break;
                 case "down":
                     if (this.y < 415 - posDetails.yStartHeight) {
-                        this.dy = this.y + posDetails.yHeight;
+                        this.y = this.y + posDetails.yHeight;
                     }
             }
         }
