@@ -4,8 +4,8 @@
 /*Intro sequence*/
 const intro = (function introSeq() {
 
-    const modalBack = document.getElementById('modalBackground');
-    const introModal = document.getElementById('introModal');
+    const modalBack = document.querySelector('.modalBackground');
+    const introModal = document.querySelector('.introModal');
 
     introModal.classList.toggle('initIntro');
 
@@ -16,7 +16,7 @@ const intro = (function introSeq() {
         this.introDone = true;
     }
 
-    document.getElementById('start').addEventListener('click', callback.bind(this));
+    document.querySelector('.start').addEventListener('click', callback.bind(this));
 
 })();
 
@@ -87,8 +87,8 @@ var Engine = (function(global) {
 
     /* to display the end game modal */
     function endGameDisplay() {
-        this.endModal = document.querySelector("#endGameModal");
-        this.modalBack = document.querySelector('#modalBackground');
+        this.endModal = document.querySelector(".endGameModal");
+        this.modalBack = document.querySelector('.modalBackground');
 
         this.endModal.classList.toggle('initEnd');
         this.endModal.innerHTML = `
@@ -96,13 +96,13 @@ var Engine = (function(global) {
         <p>You Died!</p>
         <p>Thanks for playing!  Hope you enjoyed!</p>
         <p>Go again?</p>
-        <div id="restart" class="button">
+        <div class="button restart">
             <p>Restart</p>
         </div>`
         this.modalBack.style.opacity = 1;
 
         
-        this.restart = document.querySelector('#restart');
+        this.restart = document.querySelector('.restart');
         this.restart.addEventListener('click', endGameToggle.bind(endGameDisplay));
     };
 
