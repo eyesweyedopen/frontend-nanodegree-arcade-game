@@ -74,7 +74,7 @@ body, div {
     width: 100%;
     height: 20%;
     background-color: #24388f;
-    text-decoration-color: #424141;
+    color: #a59f9f;
 }
 
 .modal .button p {
@@ -83,7 +83,7 @@ body, div {
 
 .button:hover {   
     background-color: #16297e;
-    text-decoration-color: #4e4b4b;
+    color: #e7e2e2;
     transition-duration: .5s;
     cursor: pointer;
 }
