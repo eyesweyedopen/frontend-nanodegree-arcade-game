@@ -1,21 +1,6 @@
 // "use strict"
 /* Engine.js
- * This file provides the game loop functionality (update entities and render),
- * draws the initial game board on the screen, and then calls the update and
- * render methods on your player and enemy objects (defined in your app.js).
- *
- * A game engine works by drawing the entire game screen over and over, kind of
- * like a flipbook you may have created as a kid. When your player moves across
- * the screen, it may look like just that image/character is moving or being
- * drawn but that is not the case. What's really happening is the entire "scene"
- * is being drawn over and over, presenting the illusion of animation.
- *
- * This engine makes the canvas' context (ctx) object globally available to make 
- * writing app.js a little simpler to work with.
- */
-
-
-    
+  
 /*Intro sequence*/
 const intro = (function introSeq() {
 
@@ -29,13 +14,13 @@ const intro = (function introSeq() {
         introModal.classList.toggle('initIntro');
         modalBack.style.opacity = 0;
         this.introDone = true;
-        return introDone;
     }
 
     document.getElementById('start').addEventListener('click', callback.bind(this));
 
 })();
 
+/* Game loop */
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -55,7 +40,7 @@ var Engine = (function(global) {
     canvas.height = 606;
     doc.body.appendChild(canvas);
 
-    (function() {this.posDetails = new posDetails()})(global);
+    (function() {this.PosDetails = new PosDetails()})(global);
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -96,43 +81,41 @@ var Engine = (function(global) {
                 init();
             } else {
                 endGameDisplay.bind(endGameDisplay)();
-
-
-                /* to display the end game modal */
-                function endGameDisplay() {
-                    this.endModal = document.querySelector("#endGameModal");
-                    this.modalBack = document.querySelector('#modalBackground');
-
-                    this.endModal.classList.toggle('initEnd');
-                    this.endModal.innerHTML = `
-                    <h1>Level ${level}</h1>
-                    <p>You Died!</p>
-                    <p>Thanks for playing!  Hope you enjoyed!</p>
-                    <p>Go again?</p>
-                    <div id="restart" class="button">
-                        <p>Restart</p>
-                    </div>`
-                    this.modalBack.style.opacity = 1;
-
-                    
-                    this.restart = document.querySelector('#restart');
-                    this.restart.addEventListener('click', endGameToggle.bind(endGameDisplay));
-                    };
-
-                /* to remove the end game modal and reset the game */
-                function endGameToggle() {
-                    this.endModal.classList.toggle('initEnd');
-                    this.modalBack.style.opacity = 0;
-                    this.restart.removeEventListener('click', endGameToggle);
-                    level = 1; // reset to level 1
-                    maxEnemies = 1; // reset to initial state in app.js
-                    custSpeed = 20; // reset to initial state in app.js   
-                    init();
-                };
-
             };
         };
     }
+
+    /* to display the end game modal */
+    function endGameDisplay() {
+        this.endModal = document.querySelector("#endGameModal");
+        this.modalBack = document.querySelector('#modalBackground');
+
+        this.endModal.classList.toggle('initEnd');
+        this.endModal.innerHTML = `
+        <h1>Level ${level}</h1>
+        <p>You Died!</p>
+        <p>Thanks for playing!  Hope you enjoyed!</p>
+        <p>Go again?</p>
+        <div id="restart" class="button">
+            <p>Restart</p>
+        </div>`
+        this.modalBack.style.opacity = 1;
+
+        
+        this.restart = document.querySelector('#restart');
+        this.restart.addEventListener('click', endGameToggle.bind(endGameDisplay));
+    };
+
+    /* to remove the end game modal and reset the game */
+    function endGameToggle() {
+        this.endModal.classList.toggle('initEnd');
+        this.modalBack.style.opacity = 0;
+        this.restart.removeEventListener('click', endGameToggle);
+        level = 1; // reset to level 1
+        maxEnemies = 1; // reset to initial state in app.js
+        custSpeed = 20; // reset to initial state in app.js   
+        init();
+    };
 
 
 
@@ -169,7 +152,7 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        posDetails.allEnemies.forEach(function(enemy) {
+        PosDetails.allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
         player.update();
@@ -253,7 +236,7 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        posDetails.allEnemies.forEach(function(enemy) {
+        PosDetails.allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
@@ -262,7 +245,7 @@ var Engine = (function(global) {
 
     function reset() {  
         this.player = new Player();
-        posDetails.allEnemies.length = 0;
+        PosDetails.allEnemies.length = 0;
         initEnemies();
     }
 
